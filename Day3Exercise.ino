@@ -4,10 +4,8 @@ int led2 = 4;
 int led3 = 5;
 int led4 = 6;
 int led5 = 7;
-int button_status;
+int button_status = LOW;
 int count = 0;
-int preStatus = LOW;
-int curStatus;
 
 void setup() {
   // put your setup code here, to run once:
@@ -19,9 +17,6 @@ void setup() {
   pinMode(led5, OUTPUT);
 
   Serial.begin(9600);
-
-  for (int i=3; i<=7; i++)
-    digitalWrite(i, LOW);
 }
 
 void loop() {
@@ -34,49 +29,32 @@ void loop() {
     digitalWrite(led1, LOW);
   }*/
 
-  button_recieve();
-
-  if (count == 1){
-    digitalWrite(led1, HIGH);
-    turnLedOFF(led1);
-    count = 0;
-  }
-  if (count == 2){
-    digitalWrite(led2, HIGH);
-    turnLedOFF(led2);
-    count = 0;
-  }
-  if (count == 3){
-    digitalWrite(led3, HIGH);
-    turnLedOFF(led3);
-    count = 0;
-  }
-  if (count == 4){
-    digitalWrite(led4, HIGH);
-    turnLedOFF(led4);
-    count = 0;
-  }
-  if (count == 5){
-    digitalWrite(led5, HIGH);
-    turnLedOFF(led5);
-    count = 0;
-  }
-}
-
-void button_recieve(){
   if (digitalRead(button) == HIGH){
-    delay(20);
-    if (digitalRead(button) == HIGH){
-      count++;
-    }
     while (digitalRead(button) == HIGH);
+    count++;
+    
+    if (count == 1)
+      ledControl(led1);
+    else if (count == 2)
+      ledControl(led2);
+    else if (count == 3)
+      ledControl(led3);
+    else if (count == 4)
+      ledControl(led4);
+    else if (count == 5)
+      ledControl(led5);
+    else if (count == 6){
+      for (int i=3; i<=7; i++)
+        digitalWrite(i, LOW);
+      count = 0;
+    }
   }
 }
 
-void turnLedOFF(int led){
+void ledControl(int led){
   for (int i=3; i<=7; i++){
     if (i == led)
-      continue;
+      digitalWrite(i, HIGH);
     else
       digitalWrite(i, LOW);
   }
